@@ -247,11 +247,24 @@ Feature: Manage WordPress posts
       This is some bunkum.
       """
 
+    When I run `wp post get --field=url {POST_ID}`
+    Then STDOUT should contain:
+      """
+      https://example.com/?p={POST_ID}
+      """
+    And save STDOUT as {POST_URL}
+
     When I run `wp post url 1 {POST_ID}`
     Then STDOUT should be:
       """
       https://example.com/?p=1
       https://example.com/?p={POST_ID}
+      """
+
+    When I run `wp post url-to-id {POST_URL}`
+    Then STDOUT should contain:
+      """
+      {POST_ID}
       """
 
   Scenario: Update a post from file or STDIN
